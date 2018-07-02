@@ -24,10 +24,10 @@ protected:
 
 public:	
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void BoostSwoopBike(ASwoopPawn* swoopPawn);
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 		float speedBoostAmount = 10;
 
 		

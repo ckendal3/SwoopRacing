@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "HealthComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/MeshComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "SwoopPawn.generated.h"
 
 UCLASS()
@@ -58,11 +60,19 @@ public:
 		float badShiftDecrease = 10;
 	UPROPERTY(EditAnywhere)
 		float horizontalMovementSpeed = 10;
+	//UPROPERTY(EditAnywhere)
+		//UMeshComponent* swoopMesh;
 
 	FVector newLocation;
 
 	UFUNCTION()
 		void CalculateShift();
+
+	UFUNCTION()
+		void RestartMap();
+
+	UFUNCTION()
+		void GameStop();
 
 	bool isAlive = true;
 	float timeSinceLastCall = 0;

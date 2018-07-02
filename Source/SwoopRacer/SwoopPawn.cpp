@@ -10,6 +10,8 @@ ASwoopPawn::ASwoopPawn()
 
 	// used for health
 	healthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	//swoopMesh = CreateDefaultSubobject<UMeshComponent>(TEXT("SwoopMesh"));
+
 }
 
 // Called when the game starts or when spawned
@@ -37,7 +39,7 @@ void ASwoopPawn::Tick(float DeltaTime)
 	}
 	
 
-	if (timeSinceLastCall >= .5f) // Speed up every half second
+	if (timeSinceLastCall >= .25f) // Speed up every half second
 	{	
 		CalculateShift(); // Check if player needs to shift
 		IncreaseSpeed();
@@ -52,6 +54,7 @@ void ASwoopPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 	InputComponent->BindAxis("MoveRight", this, &ASwoopPawn::MoveHorizontal);
 	InputComponent->BindAction("ShiftGear", IE_Pressed, this, &ASwoopPawn::ShiftGears);
+	InputComponent->BindAction("Restartmap", IE_Pressed, this, &ASwoopPawn::RestartMap);
 
 }
 
@@ -68,13 +71,21 @@ void ASwoopPawn::IncreaseSpeed()
 }
 
 //Decrease Speed
-void ASwoopPawn::DecreaseSpeed(float decreaseAmount)
+void ASwoopPawn::DecreaseSpeed(float decreaseAmount) // Needs to point slightly down
 {
-	speed -= decreaseAmount;
+	
+	if ((speed - decreaseAmount) *currentGear <= 0) // Don't ever decrease speed to zero or less
+	{
+		speed = 1;
+	}
+	else
+	{
+		speed -= decreaseAmount; // decrease speed for bad shift and the higher the gear the worse the penalty
+	}
 }
 
 // Big Speed Boost
-void ASwoopPawn::SpeedBoost(float speedBoost)
+void ASwoopPawn::SpeedBoost(float speedBoost) // Needs to Tilt Slightly up
 {
 	speed += speedBoost;
 }
@@ -89,20 +100,13 @@ void ASwoopPawn::ShiftGears()
 		readyToShift = false;
 		return; // need to shift to gain more speed
 	}
-	else if(currentGear)
+	else if(currentGear != 0)
 	{
-		if ((speed - badShiftDecrease) *currentGear <= 0) // Don't ever decrease speed to zero or less
-		{
-			speed = 1;
-		}
-		else
-		{
-			DecreaseSpeed(badShiftDecrease *currentGear); // decrease speed for bad shift and the higher the gear the worse the penalty
-		}
+		DecreaseSpeed(badShiftDecrease *currentGear); // decrease speed for bad shift and the higher the gear the worse the penalty
 	}
 }
 
-void ASwoopPawn::MoveForward()
+void ASwoopPawn::MoveForward() // Needs to rotate slightly depending on axis
 {
 	newLocation += (GetActorForwardVector()) * speed;
 	SetActorLocation(newLocation, true);
@@ -139,5 +143,20 @@ void ASwoopPawn::CalculateShift()
 	{
 		readyToShift = true;
 	}
+	else if ((speed / (currentGear - 1) < 50 && currentGear > 1)) // Auto DownShift is low speed from being bad
+	{
+		currentGear -= 1;
+	}
+}
+
+void ASwoopPawn::GameStop()
+{
+	// Call pause game or pause menu or game over screen
+}
+
+// Debug Tool to restart level
+void ASwoopPawn::RestartMap()
+{
+	UGameplayStatics::OpenLevel((UObject*)GetWorld(), "SwoopTest", true);
 }
 

@@ -24,19 +24,15 @@ protected:
 
 public:	
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 		float damageAmount = 25;
 		
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 		float speedReductionAmount = 10;
 	
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void DamageSwoopBike(ASwoopPawn* swoopPawn);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void ReduceSwoopBikeSpeed(ASwoopPawn* swoopPawn);
-
-
-		
-	
 };
