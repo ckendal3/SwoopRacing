@@ -8,6 +8,8 @@
 #include "Components/InputComponent.h"
 #include "Components/MeshComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
+#include "Components/AudioComponent.h"
 #include "SwoopPawn.generated.h"
 
 UCLASS()
@@ -60,6 +62,11 @@ public:
 		float badShiftDecrease = 10;
 	UPROPERTY(EditAnywhere)
 		float horizontalMovementSpeed = 10;
+	UPROPERTY(EditAnywhere)
+		USoundCue* propellerAudioCue;
+	
+	UAudioComponent* propellerAudioComponent;
+
 	//UPROPERTY(EditAnywhere)
 		//UMeshComponent* swoopMesh;
 

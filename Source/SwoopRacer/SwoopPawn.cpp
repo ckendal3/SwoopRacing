@@ -10,6 +10,8 @@ ASwoopPawn::ASwoopPawn()
 
 	// used for health
 	healthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	propellerAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("PropellerAudioComp"));
+
 	//swoopMesh = CreateDefaultSubobject<UMeshComponent>(TEXT("SwoopMesh"));
 
 }
@@ -18,11 +20,16 @@ ASwoopPawn::ASwoopPawn()
 void ASwoopPawn::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	propellerAudioComponent->SetSound(propellerAudioCue);
+	propellerAudioComponent->AutoAttachParent;
 
 	// Set this pawn to be controlled by the first player
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
 	newLocation = GetActorLocation(); // this is fine
+
+	propellerAudioComponent->Play();
 }
 
 // Called every frame
@@ -68,6 +75,7 @@ void ASwoopPawn::IncreaseSpeed()
 	} 
 
 	speed += accelerationRate/currentGear; // accelerartion rate drops in higher gears
+	propellerAudioComponent->SetPitchMultiplier(speed / 10);
 }
 
 //Decrease Speed
@@ -82,12 +90,19 @@ void ASwoopPawn::DecreaseSpeed(float decreaseAmount) // Needs to point slightly 
 	{
 		speed -= decreaseAmount; // decrease speed for bad shift and the higher the gear the worse the penalty
 	}
+	propellerAudioComponent->SetPitchMultiplier(speed / 10);
 }
 
 // Big Speed Boost
 void ASwoopPawn::SpeedBoost(float speedBoost) // Needs to Tilt Slightly up
 {
+	// player needs to shift. Do nothing till shifted
+	if (readyToShift)
+	{
+		speed += speedBoost / 4;
+	}
 	speed += speedBoost;
+	propellerAudioComponent->SetPitchMultiplier(speed / 10);
 }
 
 //Shift gears to build more speed
