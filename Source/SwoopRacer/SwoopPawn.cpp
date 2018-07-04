@@ -11,6 +11,12 @@ ASwoopPawn::ASwoopPawn()
 	// used for health
 	healthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	propellerAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("PropellerAudioComp"));
+	
+	rootCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("RootCollision"));
+	rootCollision->SetBoxExtent(FVector(200, 128, 32), true);
+	RootComponent = rootCollision;
+
+	propellerAudioComponent->SetupAttachment(RootComponent);
 
 	//swoopMesh = CreateDefaultSubobject<UMeshComponent>(TEXT("SwoopMesh"));
 
@@ -22,7 +28,6 @@ void ASwoopPawn::BeginPlay()
 	Super::BeginPlay();
 	
 	propellerAudioComponent->SetSound(propellerAudioCue);
-	propellerAudioComponent->AutoAttachParent;
 
 	// Set this pawn to be controlled by the first player
 	AutoPossessPlayer = EAutoReceiveInput::Player0;

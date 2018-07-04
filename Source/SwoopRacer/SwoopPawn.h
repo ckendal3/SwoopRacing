@@ -10,6 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 #include "Components/AudioComponent.h"
+#include "Components/BoxComponent.h"
 #include "SwoopPawn.generated.h"
 
 UCLASS()
@@ -66,6 +67,9 @@ public:
 		USoundCue* propellerAudioCue;
 	
 	UAudioComponent* propellerAudioComponent;
+
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* rootCollision;
 
 	//UPROPERTY(EditAnywhere)
 		//UMeshComponent* swoopMesh;
