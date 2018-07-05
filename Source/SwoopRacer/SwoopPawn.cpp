@@ -127,7 +127,7 @@ void ASwoopPawn::ShiftGears()
 	}
 	else if(currentGear != 0)
 	{
-		DecreaseSpeed(badShiftDecrease *currentGear); // decrease speed for bad shift and the higher the gear the worse the penalty
+		DecreaseSpeed(badShiftDecrease + (2 * currentGear)); // decrease speed for bad shift and the higher the gear the worse the penalty
 		ShiftingSignature.Broadcast(readyToShift);
 	}
 }
@@ -160,11 +160,12 @@ void ASwoopPawn::ChangeHealth(float amount, bool isIncreasing)
 			isAlive = false;
 		}
 	}
+	PlayerDiedSignature.Broadcast(isAlive);
 }
 
 void ASwoopPawn::CalculateShift()
 {
-	// Speed divided by the gear is more than a hundred then player needs to shift
+	// Speed divided by the gear is more than 50, then player needs to shift
 	if ((speed / currentGear) >= 50 && currentGear <= MAXGEARS)
 	{
 		readyToShift = true;

@@ -15,6 +15,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpeedChange, float, currentSpeed);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FShiftReady, bool, bReadyToShift);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerDied, bool, playerIsDead);
 
 UCLASS()
 class SWOOPRACER_API ASwoopPawn : public APawn
@@ -41,6 +42,9 @@ public:
 	
 	UPROPERTY(BlueprintAssignable, Category = "EventDispatchers/Delegates")
 		FShiftReady ShiftingSignature;
+	
+	UPROPERTY(BlueprintAssignable, Category = "EventDispatchers/Delegates")
+	FPlayerDied PlayerDiedSignature;
 
 	UPROPERTY(BlueprintReadWrite)
 		UHealthComponent* healthComponent;
@@ -74,7 +78,8 @@ public:
 		float horizontalMovementSpeed = 10;
 	UPROPERTY(EditAnywhere)
 		USoundCue* propellerAudioCue;
-	
+
+	UPROPERTY(BlueprintReadWrite)
 	UAudioComponent* propellerAudioComponent;
 
 	UPROPERTY(EditAnywhere)
