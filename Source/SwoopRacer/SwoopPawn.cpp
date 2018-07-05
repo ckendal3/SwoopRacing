@@ -2,6 +2,7 @@
 
 #include "SwoopPawn.h"
 
+
 // Sets default values
 ASwoopPawn::ASwoopPawn()
 {
@@ -81,6 +82,7 @@ void ASwoopPawn::IncreaseSpeed()
 
 	speed += accelerationRate/currentGear; // accelerartion rate drops in higher gears
 	propellerAudioComponent->SetPitchMultiplier(speed / 10);
+	SpeedChangeSignature.Broadcast(speed);
 }
 
 //Decrease Speed
@@ -96,6 +98,7 @@ void ASwoopPawn::DecreaseSpeed(float decreaseAmount) // Needs to point slightly 
 		speed -= decreaseAmount; // decrease speed for bad shift and the higher the gear the worse the penalty
 	}
 	propellerAudioComponent->SetPitchMultiplier(speed / 10);
+	SpeedChangeSignature.Broadcast(speed);
 }
 
 // Big Speed Boost
@@ -108,6 +111,7 @@ void ASwoopPawn::SpeedBoost(float speedBoost) // Needs to Tilt Slightly up
 	}
 	speed += speedBoost;
 	propellerAudioComponent->SetPitchMultiplier(speed / 10);
+	SpeedChangeSignature.Broadcast(speed);
 }
 
 //Shift gears to build more speed
@@ -118,11 +122,13 @@ void ASwoopPawn::ShiftGears()
 		currentGear += 1;
 		SpeedBoost(10); // boost off every gear change
 		readyToShift = false;
+		ShiftingSignature.Broadcast(readyToShift);
 		return; // need to shift to gain more speed
 	}
 	else if(currentGear != 0)
 	{
 		DecreaseSpeed(badShiftDecrease *currentGear); // decrease speed for bad shift and the higher the gear the worse the penalty
+		ShiftingSignature.Broadcast(readyToShift);
 	}
 }
 
@@ -162,10 +168,13 @@ void ASwoopPawn::CalculateShift()
 	if ((speed / currentGear) >= 50 && currentGear <= MAXGEARS)
 	{
 		readyToShift = true;
+		ShiftingSignature.Broadcast(readyToShift);
 	}
-	else if ((speed / (currentGear - 1) < 50 && currentGear > 1)) // Auto DownShift is low speed from being bad
+	else if ((speed / (currentGear - 1) < 50 && currentGear > 1)) // Auto DownShift if low speed from being bad
 	{
 		currentGear -= 1;
+		readyToShift = false;
+		ShiftingSignature.Broadcast(readyToShift);
 	}
 }
 
@@ -177,6 +186,7 @@ void ASwoopPawn::GameStop()
 // Debug Tool to restart level
 void ASwoopPawn::RestartMap()
 {
-	UGameplayStatics::OpenLevel((UObject*)GetWorld(), "SwoopTest", true);
+	//FName mapName = GetWorld()->GetMapName();
+	UGameplayStatics::OpenLevel((UObject*)GetWorld(), "SwoopTest", true); 
 }
 

@@ -13,6 +13,9 @@
 #include "Components/BoxComponent.h"
 #include "SwoopPawn.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpeedChange, float, currentSpeed);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FShiftReady, bool, bReadyToShift);
+
 UCLASS()
 class SWOOPRACER_API ASwoopPawn : public APawn
 {
@@ -33,7 +36,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintAssignable, Category = "EventDispatchers/Delegates")
+		FSpeedChange SpeedChangeSignature;
+	
+	UPROPERTY(BlueprintAssignable, Category = "EventDispatchers/Delegates")
+		FShiftReady ShiftingSignature;
+
+	UPROPERTY(BlueprintReadWrite)
 		UHealthComponent* healthComponent;
 
 	UFUNCTION()
@@ -55,7 +64,7 @@ public:
 		float speed = 0.0f;
 	UPROPERTY(EditAnywhere)
 		float accelerationRate = 6.0f;
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 		int currentGear = 0;
 	UPROPERTY(EditAnywhere)
 		int MAXGEARS = 6;

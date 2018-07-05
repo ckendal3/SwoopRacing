@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHealthChanged, float, currentHealth, float, maxHealth);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SWOOPRACER_API UHealthComponent : public UActorComponent
@@ -34,4 +35,7 @@ public:
 
 	UFUNCTION()
 		void DecreaseHealth(float amount);
+
+	UPROPERTY(BlueprintAssignable)
+		FHealthChanged healthChanged;
 };

@@ -31,10 +31,12 @@ void UHealthComponent::IncreaseHealth(float amount, bool allowOverFlow)
 	{
 		health += amount;
 	}
+	healthChanged.Broadcast(health, maxHealth);
 }
 
 void UHealthComponent::DecreaseHealth(float amount)
 {
 	health -= amount;
+	healthChanged.Broadcast(health, maxHealth);
 }
 
