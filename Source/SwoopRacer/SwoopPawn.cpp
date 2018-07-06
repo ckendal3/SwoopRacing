@@ -120,7 +120,7 @@ void ASwoopPawn::ShiftGears()
 	if (readyToShift)
 	{
 		currentGear += 1;
-		SpeedBoost(10); // boost off every gear change
+		SpeedBoost(accelerationRate * 2); // boost off every gear change
 		readyToShift = false;
 		ShiftingSignature.Broadcast(readyToShift);
 		return; // need to shift to gain more speed
