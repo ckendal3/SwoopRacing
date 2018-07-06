@@ -9,13 +9,13 @@ ASwoopPawn::ASwoopPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	rootCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("OverlapCube"));
+	rootCollision->SetBoxExtent(FVector(200, 128, 32), true);
+	RootComponent = rootCollision;
+
 	// used for health
 	healthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	propellerAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("PropellerAudioComp"));
-	
-	rootCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("RootCollision"));
-	rootCollision->SetBoxExtent(FVector(200, 128, 32), true);
-	RootComponent = rootCollision;
 
 	propellerAudioComponent->SetupAttachment(RootComponent);
 
@@ -43,21 +43,15 @@ void ASwoopPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// Add up the times between the last call
-	timeSinceLastCall += DeltaTime;
-
+	// More frames the faster you move
 	if (currentGear > 0)
 	{
 		MoveForward();
 	}
-	
 
-	if (timeSinceLastCall >= .25f) // Speed up every half second
-	{	
-		CalculateShift(); // Check if player needs to shift
-		IncreaseSpeed();
-		timeSinceLastCall = 0; // restart timer
-	}
+	CalculateShift(); // Check if player needs to shift
+	IncreaseSpeed(DeltaTime);
+
 }
 
 // Called to bind functionality to input
@@ -72,7 +66,7 @@ void ASwoopPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 }
 
 //Function to steadily increase speed over time
-void ASwoopPawn::IncreaseSpeed()
+void ASwoopPawn::IncreaseSpeed(float deltaTime)
 {
 	// player needs to shift. Do nothing till shifted
 	if (readyToShift)
@@ -80,7 +74,7 @@ void ASwoopPawn::IncreaseSpeed()
 		return;
 	} 
 
-	speed += accelerationRate/currentGear; // accelerartion rate drops in higher gears
+	speed += (accelerationRate/currentGear) * deltaTime; // accelerartion rate drops in higher gears
 	propellerAudioComponent->SetPitchMultiplier(speed / 10);
 	SpeedChangeSignature.Broadcast(speed);
 }
@@ -134,7 +128,7 @@ void ASwoopPawn::ShiftGears()
 
 void ASwoopPawn::MoveForward() // Needs to rotate slightly depending on axis
 {
-	newLocation += (GetActorForwardVector()) * speed;
+	newLocation += (GetActorForwardVector() * speed);
 	SetActorLocation(newLocation, true);
 }
 

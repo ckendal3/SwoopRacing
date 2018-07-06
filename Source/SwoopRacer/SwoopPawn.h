@@ -11,6 +11,7 @@
 #include "Sound/SoundCue.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "SwoopPawn.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpeedChange, float, currentSpeed);
@@ -52,7 +53,7 @@ public:
 	UFUNCTION()
 		void SpeedBoost(float speedBoost);
 	UFUNCTION()
-		void IncreaseSpeed();
+		void IncreaseSpeed(float DeltaTime);
 	UFUNCTION()
 		void DecreaseSpeed(float decreaseAmount);
 	UFUNCTION()
@@ -83,7 +84,7 @@ public:
 	UAudioComponent* propellerAudioComponent;
 
 	UPROPERTY(EditAnywhere)
-	UBoxComponent* rootCollision;
+		UBoxComponent* rootCollision;
 
 	//UPROPERTY(EditAnywhere)
 		//UMeshComponent* swoopMesh;
@@ -100,7 +101,6 @@ public:
 		void GameStop();
 
 	bool isAlive = true;
-	float timeSinceLastCall = 0;
 
 	bool readyToShift = true; // is true so you have to shift to start moving
 	
