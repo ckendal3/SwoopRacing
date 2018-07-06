@@ -2,6 +2,7 @@
 
 #include "SwoopPawn.h"
 
+// AudioPropeller pitch needs to be own method
 
 // Sets default values
 ASwoopPawn::ASwoopPawn()

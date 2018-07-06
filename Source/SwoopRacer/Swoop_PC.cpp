@@ -41,6 +41,7 @@ void ASwoop_PC::UpdateRace()
 // Race is over so do stuff
 void ASwoop_PC::StopRace()
 {
+	raceStarted = false;
 	// Stop LapTIme
 	// Save if good
 }
