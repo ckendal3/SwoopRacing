@@ -12,7 +12,7 @@ void ASwoop_PC::Tick(float DeltaTime)
 	{
 		
 	}
-	
+
 }
 
 
@@ -42,6 +42,8 @@ void ASwoop_PC::UpdateRace()
 // Race is over so do stuff
 void ASwoop_PC::StopRace()
 {
+	GetWorldTimerManager().ClearTimer(lapTimeHandle);
+
 	// Stop LapTIme
 	// Save if good
 }
