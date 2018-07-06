@@ -35,9 +35,8 @@ public:
 	FTimerHandle lapTimeHandle;
 
 
-	UFUNCTION()
-		virtual void BeginPlay() override;
-	
+	// Override BeginPlay function
+	virtual void BeginPlay() override;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -49,13 +48,14 @@ public:
 	void UpdateCountdown();
 	void StopCountdown();
 
+	void RaceWon();
+	void RaceFailed();
+
+	float lapTime;
+	bool raceStarted, raceSuccess, raceFailure = false; // Make an enum?
+
 
 	UPROPERTY(EditAnywhere)
 	int32 countdownTime = 3;
-
-	float lapTime;
-
-	bool raceStarted = false;
-	
 	
 };

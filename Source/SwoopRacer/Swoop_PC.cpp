@@ -8,13 +8,9 @@ void ASwoop_PC::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// If input received before countdown timer is done, disqualified
-	if (!raceStarted)
+	if(raceStarted)
 	{
-		
-	}
-	else
-	{
-		UpdateRace();
+		UpdateRace(); // Update Laptime
 	}
 }
 
@@ -42,8 +38,20 @@ void ASwoop_PC::UpdateRace()
 void ASwoop_PC::StopRace()
 {
 	raceStarted = false;
-	// Stop LapTIme
-	// Save if good
+	SetActorTickEnabled(false);
+
+	//-------For Menus-------//
+	//SetPause(true);
+	//bShowMouseCursor = true;
+
+	if (raceSuccess)
+	{
+		RaceWon();
+	}
+	else if (raceFailure)
+	{
+		RaceFailed();
+	}
 }
 
 // Start beginning match countdown to start race
@@ -74,6 +82,19 @@ void ASwoop_PC::StopCountdown()
 	raceStarted = true;
 	StartRace();
 }
+
+void ASwoop_PC::RaceWon()
+{
+	//Save Time if good enough
+	//Display win menu
+}
+
+void ASwoop_PC::RaceFailed()
+{
+	//Discard LapTime
+	//Display Lost Menu
+}
+
 
 
 

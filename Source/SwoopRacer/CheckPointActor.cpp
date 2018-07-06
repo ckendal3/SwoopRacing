@@ -6,8 +6,6 @@
 // Sets default values
 ACheckPointActor::ACheckPointActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
 
 }
 
@@ -18,26 +16,19 @@ void ACheckPointActor::BeginPlay()
 	
 }
 
-// Called every frame
-void ACheckPointActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 void ACheckPointActor::FinishLineReached(ASwoopPawn* pawn)
 {
 	ASwoop_PC* player = (ASwoop_PC*) pawn->GetController();
 
 	if (player != nullptr)
 	{
+		player->raceSuccess = true;
 		player->StopRace();
 
 		// do something better for slowing down over 3 seconds
-		pawn->DecreaseSpeed(1000); // Do something else in the future
+		//pawn->speed = 0; // Do something else in the future
 		pawn->currentGear = 0;
 	}
-
 }
 
 void ACheckPointActor::CheckpointReached(ASwoopPawn* pawn)

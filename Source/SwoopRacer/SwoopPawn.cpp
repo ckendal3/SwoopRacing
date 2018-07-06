@@ -35,7 +35,6 @@ void ASwoopPawn::BeginPlay()
 	horizontalMovementSpeed *= 27.8;
 	badShiftDecrease *= 27.8;
 	accelerationRate *= 27.8;
-	//speed *= 1667;
 	//-----------------------//
 	
 	propellerAudioComponent->SetSound(propellerAudioCue);
@@ -84,7 +83,7 @@ void ASwoopPawn::IncreaseSpeed()
 	} 
 
 	speed += (accelerationRate/currentGear) * GetWorld()->GetDeltaSeconds(); // accelerartion rate drops in higher gears
-	propellerAudioComponent->SetPitchMultiplier(speed / 1000);
+	propellerAudioComponent->SetPitchMultiplier(speed / 1000); // Needs own method
 	SpeedChangeSignature.Broadcast(speed);
 }
 
@@ -122,7 +121,7 @@ void ASwoopPawn::ShiftGears()
 	if (readyToShift)
 	{
 		currentGear += 1;
-		SpeedBoost(accelerationRate * 2); // boost off every gear change
+		//SpeedBoost(accelerationRate * 2); // boost off every gear change
 		readyToShift = false;
 		ShiftingSignature.Broadcast(readyToShift);
 		return; // need to shift to gain more speed
