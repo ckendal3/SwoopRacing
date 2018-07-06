@@ -53,7 +53,7 @@ public:
 	UFUNCTION()
 		void SpeedBoost(float speedBoost);
 	UFUNCTION()
-		void IncreaseSpeed(float DeltaTime);
+		void IncreaseSpeed();
 	UFUNCTION()
 		void DecreaseSpeed(float decreaseAmount);
 	UFUNCTION()
@@ -77,6 +77,8 @@ public:
 		float badShiftDecrease = 10;
 	UPROPERTY(EditAnywhere)
 		float horizontalMovementSpeed = 10;
+	UPROPERTY(EditAnywhere)
+		float MAXSPEEDPERGEAR = 50;
 	UPROPERTY(EditAnywhere)
 		USoundCue* propellerAudioCue;
 

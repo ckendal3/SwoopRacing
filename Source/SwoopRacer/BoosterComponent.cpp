@@ -25,6 +25,8 @@ void UBoosterComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+
+	speedBoostAmount *= 27.8;
 	
 }
 

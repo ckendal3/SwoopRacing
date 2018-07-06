@@ -53,7 +53,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 countdownTime = 3;
 
-	int32 lapTime;
+	float lapTime;
 
 	bool raceStarted = false;
 	

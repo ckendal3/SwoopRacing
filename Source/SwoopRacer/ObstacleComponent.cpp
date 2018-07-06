@@ -25,6 +25,7 @@ void UObstacleComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	speedReductionAmount *= 27.8;
 	
 }
 

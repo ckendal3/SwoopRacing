@@ -12,7 +12,10 @@ void ASwoop_PC::Tick(float DeltaTime)
 	{
 		
 	}
-
+	else
+	{
+		UpdateRace();
+	}
 }
 
 
@@ -27,23 +30,17 @@ void ASwoop_PC::BeginPlay()
 void ASwoop_PC::StartRace()
 {
 	raceStartSignature.Broadcast(raceStarted);
-
-	GetWorldTimerManager().SetTimer(lapTimeHandle, this, &ASwoop_PC::UpdateRace, 1.f, true);
-
 }
 
 // Update LapTime Every Call
 void ASwoop_PC::UpdateRace()
 {
-	lapTime += 1;
-	lapTimeUpdateSignature.Broadcast(lapTime);
+	lapTimeUpdateSignature.Broadcast(lapTime += GetWorld()->GetDeltaSeconds());
 }
 
 // Race is over so do stuff
 void ASwoop_PC::StopRace()
 {
-	GetWorldTimerManager().ClearTimer(lapTimeHandle);
-
 	// Stop LapTIme
 	// Save if good
 }

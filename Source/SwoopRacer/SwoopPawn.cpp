@@ -27,6 +27,15 @@ ASwoopPawn::ASwoopPawn()
 void ASwoopPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//-----------------------//
+	//Abstract out all cm/s to km/h conversions
+	MAXSPEEDPERGEAR *= 27.8;
+	horizontalMovementSpeed *= 27.8;
+	badShiftDecrease *= 27.8;
+	accelerationRate *= 27.8;
+	//speed *= 1667;
+	//-----------------------//
 	
 	propellerAudioComponent->SetSound(propellerAudioCue);
 
@@ -50,8 +59,7 @@ void ASwoopPawn::Tick(float DeltaTime)
 	}
 
 	CalculateShift(); // Check if player needs to shift
-	IncreaseSpeed(DeltaTime);
-
+	IncreaseSpeed();
 }
 
 // Called to bind functionality to input
@@ -66,7 +74,7 @@ void ASwoopPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 }
 
 //Function to steadily increase speed over time
-void ASwoopPawn::IncreaseSpeed(float deltaTime)
+void ASwoopPawn::IncreaseSpeed()
 {
 	// player needs to shift. Do nothing till shifted
 	if (readyToShift)
@@ -74,15 +82,14 @@ void ASwoopPawn::IncreaseSpeed(float deltaTime)
 		return;
 	} 
 
-	speed += (accelerationRate/currentGear) * deltaTime; // accelerartion rate drops in higher gears
-	propellerAudioComponent->SetPitchMultiplier(speed / 10);
+	speed += (accelerationRate/currentGear) * GetWorld()->GetDeltaSeconds(); // accelerartion rate drops in higher gears
+	propellerAudioComponent->SetPitchMultiplier(speed / 1000);
 	SpeedChangeSignature.Broadcast(speed);
 }
 
 //Decrease Speed
 void ASwoopPawn::DecreaseSpeed(float decreaseAmount) // Needs to point slightly down
 {
-	
 	if ((speed - decreaseAmount) *currentGear <= 0) // Don't ever decrease speed to zero or less
 	{
 		speed = 1;
@@ -91,20 +98,20 @@ void ASwoopPawn::DecreaseSpeed(float decreaseAmount) // Needs to point slightly 
 	{
 		speed -= decreaseAmount; // decrease speed for bad shift and the higher the gear the worse the penalty
 	}
-	propellerAudioComponent->SetPitchMultiplier(speed / 10);
+	propellerAudioComponent->SetPitchMultiplier(speed / 1000);
 	SpeedChangeSignature.Broadcast(speed);
 }
 
 // Big Speed Boost
 void ASwoopPawn::SpeedBoost(float speedBoost) // Needs to Tilt Slightly up
-{
+{;
 	// player needs to shift. Do nothing till shifted
 	if (readyToShift)
 	{
 		speed += speedBoost / 4;
 	}
 	speed += speedBoost;
-	propellerAudioComponent->SetPitchMultiplier(speed / 10);
+	propellerAudioComponent->SetPitchMultiplier(speed / 1000);
 	SpeedChangeSignature.Broadcast(speed);
 }
 
@@ -128,14 +135,14 @@ void ASwoopPawn::ShiftGears()
 
 void ASwoopPawn::MoveForward() // Needs to rotate slightly depending on axis
 {
-	newLocation += (GetActorForwardVector() * speed);
+	newLocation += ((GetActorForwardVector() * speed) * GetWorld()->GetDeltaSeconds());
 	SetActorLocation(newLocation, true);
 }
 
 // Move side to side
 void ASwoopPawn::MoveHorizontal(float AxisValue)
 {
-	newLocation += (GetActorRightVector() * FMath::Clamp(AxisValue, -1.0f, 1.0f)) * horizontalMovementSpeed;
+	newLocation += (GetActorRightVector() * FMath::Clamp(AxisValue, -1.0f, 1.0f)) * (horizontalMovementSpeed * GetWorld()->GetDeltaSeconds());
 	SetActorLocation(newLocation, true);
 }
 
@@ -160,12 +167,12 @@ void ASwoopPawn::ChangeHealth(float amount, bool isIncreasing)
 void ASwoopPawn::CalculateShift()
 {
 	// Speed divided by the gear is more than 50, then player needs to shift
-	if ((speed / currentGear) >= 50 && currentGear <= MAXGEARS)
+	if ((speed / currentGear) >= MAXSPEEDPERGEAR && currentGear <= MAXGEARS)
 	{
 		readyToShift = true;
 		ShiftingSignature.Broadcast(readyToShift);
 	}
-	else if ((speed / (currentGear - 1) < 50 && currentGear > 1)) // Auto DownShift if low speed from being bad
+	else if ((speed / (currentGear - 1) < MAXSPEEDPERGEAR && currentGear > 1)) // Auto DownShift if low speed from being bad
 	{
 		currentGear -= 1;
 		readyToShift = false;
