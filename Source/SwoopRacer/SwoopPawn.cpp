@@ -29,6 +29,8 @@ void ASwoopPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	mySwoopPC = (ASwoop_PC*)GetController();
+
 	//-----------------------//
 	//Abstract out all cm/s to km/h conversions
 	MAXSPEEDPERGEAR *= 27.8;
@@ -190,5 +192,17 @@ void ASwoopPawn::RestartMap()
 {
 	//FName mapName = GetWorld()->GetMapName();
 	UGameplayStatics::OpenLevel((UObject*)GetWorld(), "SwoopTest", true); 
+}
+
+//Check if player is dead
+void ASwoopPawn::CheckIfDead(float health)
+{
+	if (health <= 0)
+	{
+		mySwoopPC->raceFailure = true;
+		mySwoopPC->StopRace();
+
+		currentGear = 0;
+	}
 }
 

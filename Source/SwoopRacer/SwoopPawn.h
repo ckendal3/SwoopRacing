@@ -12,6 +12,7 @@
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Swoop_PC.h"
 #include "SwoopPawn.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpeedChange, float, currentSpeed);
@@ -45,10 +46,16 @@ public:
 		FShiftReady ShiftingSignature;
 	
 	UPROPERTY(BlueprintAssignable, Category = "EventDispatchers/Delegates")
-	FPlayerDied PlayerDiedSignature;
+		FPlayerDied PlayerDiedSignature;
 
 	UPROPERTY(BlueprintReadWrite)
 		UHealthComponent* healthComponent;
+
+	UFUNCTION(BlueprintCallable)
+		void CheckIfDead(float currentHealth);
+
+	UPROPERTY()
+		ASwoop_PC* mySwoopPC;
 
 	UFUNCTION()
 		void SpeedBoost(float speedBoost);

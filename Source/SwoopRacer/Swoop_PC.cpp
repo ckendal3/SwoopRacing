@@ -35,7 +35,7 @@ void ASwoop_PC::UpdateRace()
 }
 
 // Race is over so do stuff
-void ASwoop_PC::StopRace()
+void ASwoop_PC::StopRace() // CAll raceSuccess and RaceFailre and call StopRace in there?
 {
 	raceStarted = false;
 	SetActorTickEnabled(false);

@@ -22,6 +22,8 @@ void ACheckPointActor::FinishLineReached(ASwoopPawn* pawn)
 
 	if (player != nullptr)
 	{
+		//Call RaceSuccess which Calls StopRace
+
 		player->raceSuccess = true;
 		player->StopRace();
 
